@@ -10,6 +10,8 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -22,9 +24,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static final String URL_QUERY = "url";
     private static final int QUERY_LOADER = 55;
+    private static final String QUERY_RESULT = "results";
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessage;
-    private String urlResult;
+    private String queryResult;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,12 +38,28 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
+        //retrieving urlResult from savedInstanceState if any
+        if (savedInstanceState != null) {
+            queryResult = savedInstanceState.getString(QUERY_RESULT);
+        }
+
         mLoadingIndicator = (ProgressBar) findViewById(R.id.main_progress_bar);
         mErrorMessage = (TextView) findViewById(R.id.main_error_message);
 
         //initially passing in popular to create a url that provides popular movies
         //to inflate on startup
         makeQuery("popular");
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_item, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     //this method builds the and passes the url to the loader using a bundle for getting response
@@ -79,11 +98,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
 
                 //checking if results are already stored from previous similar request
-                // and simply delivering data by over passing loadInBackground to prevent
+                // and simply delivering data by overPassing loadInBackground to prevent
                 //redundant api calls
 
-                if (urlResult != null) {
-                    deliverResult(urlResult);
+                if (queryResult != null) {
+                    deliverResult(queryResult);
                 } else {
                     forceLoad();
                 }
@@ -113,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             @Override
             public void deliverResult(String data) {
-                urlResult = data;
+                queryResult = data;
                 super.deliverResult(data);
             }
         };
@@ -167,5 +186,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<String> loader) {
 
+    }
+
+    //saving queryResults so it's not lost on rotation of device
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(QUERY_RESULT, queryResult);
     }
 }
