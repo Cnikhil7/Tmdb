@@ -2,4 +2,8 @@
     <string name="app_name">UdacityMovieProject</string>
     <string name="error_message">No Results !</string>
     <string name="movie_app">MovieApp</string>
+    <string name="sort">Sort</string>
+    <string name="popular">Popular</string>
+    <string name="top_rated">Top Rated</string>
+
 </resources>
