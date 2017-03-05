@@ -25,9 +25,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String URL_QUERY = "url";
     private static final int QUERY_LOADER = 55;
     private static final String QUERY_RESULT = "results";
+    private static final String Last_URL_QUERIED = "lastUrlQueried";
     private ProgressBar mLoadingIndicator;
     private TextView mErrorMessage;
     private String queryResult;
+    private String lastUrlQueried;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         //retrieving urlResult from savedInstanceState if any
         if (savedInstanceState != null) {
             queryResult = savedInstanceState.getString(QUERY_RESULT);
+            lastUrlQueried = savedInstanceState.getString(Last_URL_QUERIED);
         }
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.main_progress_bar);
@@ -48,7 +51,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //initially passing in popular to create a url that provides popular movies
         //to inflate on startup
-        makeQuery("popular");
+        if (lastUrlQueried == null || lastUrlQueried
+                .equals(NetworkUtils.buildUrl("popular").toString())) {
+            makeQuery("popular");
+        } else {
+            makeQuery("top_rated");
+        }
     }
 
     @Override
@@ -57,8 +65,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         return super.onCreateOptionsMenu(menu);
     }
 
+    //choosing movies url to query from
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int menuSelected = item.getItemId();
+
+        switch (menuSelected) {
+            case R.id.action_popular:
+                makeQuery("popular");
+                return true;
+            case R.id.action_top_rated:
+                makeQuery("top_rated");
+                return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -92,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 super.onStartLoading();
 
                 //checking if input arguments are null and simply returning if true
-
                 if (args == null) {
                     return;
                 }
@@ -100,6 +119,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 //checking if results are already stored from previous similar request
                 // and simply delivering data by overPassing loadInBackground to prevent
                 //redundant api calls
+
+                String query = args.getString(URL_QUERY);
+
+                if (lastUrlQueried == null) {
+                    lastUrlQueried = query;
+                }
+
+                if (query != null && !query.equals(lastUrlQueried)) {
+                    lastUrlQueried = query;
+                    queryResult = null;
+                }
+
+                showProgressbar();
 
                 if (queryResult != null) {
                     deliverResult(queryResult);
@@ -114,7 +146,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public String loadInBackground() {
 
-                showProgressbar();
 
                 String searchUrl = args.getString(URL_QUERY);
                 if (searchUrl == null || TextUtils.isEmpty(searchUrl)) {
@@ -122,11 +153,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
                 try {
                     URL url = new URL(searchUrl);
+                    lastUrlQueried = url.toString();
                     return NetworkUtils.getResponseFromHttpUrl(url);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     return null;
-
                 }
             }
 
@@ -191,7 +223,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     //saving queryResults so it's not lost on rotation of device
     @Override
     protected void onSaveInstanceState(Bundle outState) {
+
         super.onSaveInstanceState(outState);
         outState.putString(QUERY_RESULT, queryResult);
+        outState.putString(Last_URL_QUERIED, lastUrlQueried);
     }
+
+
 }
