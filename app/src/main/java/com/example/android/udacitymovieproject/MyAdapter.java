@@ -17,12 +17,21 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
 
     private Context mContext;
     private ArrayList<MovieObject> mList;
+    private ItemClickListener mClickListener;
+
+
+    //interface to handle on item clicks on views in main activity grid items
+    interface ItemClickListener {
+        void onItemClick(String id);
+    }
 
     //constructor that accepts context and an arrayList of movieObjects parsed by
     //JsonUtils
-    MyAdapter(Context context, ArrayList<MovieObject> vList) {
+
+    MyAdapter(Context context, ArrayList<MovieObject> vList, ItemClickListener vClickListener) {
         mContext = context;
         mList = vList;
+        mClickListener = vClickListener;
     }
 
     @Override
@@ -54,7 +63,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
     //a holder class that keeps references of the views that are inflated by recycler view in
     //onBindViewHolder
 
-    class MyHolder extends RecyclerView.ViewHolder {
+    class MyHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView mTitle;
         private ImageView mPoster;
 
@@ -62,6 +71,14 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
             super(itemView);
             mTitle = (TextView) itemView.findViewById(R.id.list_card_item);
             mPoster = (ImageView) itemView.findViewById(R.id.image_poster);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            int position = getAdapterPosition();
+            MovieObject movieObject = mList.get(position);
+            mClickListener.onItemClick(movieObject.getTitle());
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.example.android.udacitymovieproject;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -15,12 +16,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import com.example.android.udacitymovieproject.Activity.DetailsActivity;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String> {
+
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>
+        , MyAdapter.ItemClickListener {
 
     private static final String URL_QUERY = "url";
     private static final int QUERY_LOADER = 55;
@@ -166,6 +170,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             public void deliverResult(String data) {
                 queryResult = data;
                 super.deliverResult(data);
+                mLoadingIndicator.setVisibility(View.INVISIBLE);
             }
         };
 
@@ -195,7 +200,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             RecyclerView recyclerView = (RecyclerView) findViewById(R.id.main_gridRecyclerView);
             RecyclerView.LayoutManager layoutManager = new GridLayoutManager(this, span);
-            RecyclerView.Adapter adapter = new MyAdapter(this, in);
+            RecyclerView.Adapter adapter = new MyAdapter(this, in, this);
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(layoutManager);
             recyclerView.setHasFixedSize(true);
@@ -230,4 +235,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
+    //implementing interface onItemClick method from adapter class
+    @Override
+    public void onItemClick(String id) {
+        Toast.makeText(getApplicationContext(), "Item " + id + " clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+        intent.putExtra("MOVIE_ID", id);
+        startActivity(intent);
+    }
 }
