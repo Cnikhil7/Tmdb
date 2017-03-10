@@ -22,7 +22,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
 
     //interface to handle on item clicks on views in main activity grid items
     interface ItemClickListener {
-        void onItemClick(String id);
+        void onItemClick(String id, String posterUrl);
     }
 
     //constructor that accepts context and an arrayList of movieObjects parsed by
@@ -78,7 +78,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
         public void onClick(View v) {
             int position = getAdapterPosition();
             MovieObject movieObject = mList.get(position);
-            mClickListener.onItemClick(movieObject.getTitle());
+            mClickListener.onItemClick(movieObject.getTitle(), movieObject.getPosterUrl());
         }
     }
 }

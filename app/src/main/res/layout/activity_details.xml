@@ -6,12 +6,22 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/details_title"
+        android:id="@+id/detail_itemTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textSize="24sp"
         android:textStyle="bold"
         tools:text="Details Activity" />
+
+    <ImageView
+        android:id="@+id/detail_itemPoster"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:minHeight="200dp"
+        android:minWidth="140dp"
+        android:scaleType="centerCrop" />
 
 </LinearLayout>

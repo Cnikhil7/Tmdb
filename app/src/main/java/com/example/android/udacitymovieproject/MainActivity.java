@@ -17,7 +17,9 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.android.udacitymovieproject.Activity.DetailsActivity;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -235,12 +237,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
 
-    //implementing interface onItemClick method from adapter class
+    //implementing interface onItemClick method from adapter class. this method sends selected
+    //item's title and poster url to detail activity
+
     @Override
-    public void onItemClick(String id) {
+    public void onItemClick(String id, String posterUrl) {
         Toast.makeText(getApplicationContext(), "Item " + id + " clicked", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
         intent.putExtra("MOVIE_ID", id);
+        intent.putExtra("POSTER_ID", posterUrl);
         startActivity(intent);
     }
 }
