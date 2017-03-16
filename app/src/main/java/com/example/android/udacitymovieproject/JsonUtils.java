@@ -9,9 +9,9 @@ import java.util.ArrayList;
 //this class contain methods that parses the received json and returns the relevant data
 //requested by getter methods
 
-final class JsonUtils {
+public final class JsonUtils {
 
-    static ArrayList<MovieObject> getArrayList(String in) {
+    public static ArrayList<MovieObject> getArrayList(String in) {
 
         ArrayList<MovieObject> movieTitle = new ArrayList<>();
         try {
@@ -35,4 +35,32 @@ final class JsonUtils {
         return movieTitle;
     }
 
+    public static MovieObject getMovieDetails(String data) {
+
+        MovieObject movieObject = null;
+        JSONObject results = null;
+        try {
+            results = new JSONObject(data);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+
+            if (results != null) {
+                String title = results.getString("original_title");
+                String poster = results.getString("poster_path");
+                String synopsis = results.getString("overview");
+                String rating = results.getString("vote_average");
+                String year = results.getString("release_date");
+                String runtime = results.getString("runtime");
+                movieObject = new MovieObject(title, poster
+                        , synopsis, rating, year, runtime);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+        }
+        return movieObject;
+    }
 }

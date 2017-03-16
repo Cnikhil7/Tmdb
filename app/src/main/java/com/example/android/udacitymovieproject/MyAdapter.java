@@ -78,7 +78,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyHolder> {
         public void onClick(View v) {
             int position = getAdapterPosition();
             MovieObject movieObject = mList.get(position);
-            mClickListener.onItemClick(movieObject.getTitle(), movieObject.getPosterUrl());
+            mClickListener.onItemClick(movieObject.getId(), movieObject.getPosterUrl());
         }
     }
 }

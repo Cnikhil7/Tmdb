@@ -14,10 +14,11 @@ import java.util.Scanner;
  */
 
 
-class NetworkUtils {
+public class NetworkUtils {
 
     private final static String POSTER_BASE_URL = "http://image.tmdb.org/t/p/";
     private final static String API_URL = "http://api.themoviedb.org/3";
+    private final static String Movie_BASE_URL_ONE ="https://api.themoviedb.org/3/movie";
     private final static String API_KEY = "your api key goes here";
     private final static String API_APPEND = "api_key";
     private final static String LANGUAGE_TYPE = "language";
@@ -28,7 +29,7 @@ class NetworkUtils {
 
     //method for building base url to get response from get response method
 
-    static URL buildUrl(String in) {
+    public static URL buildUrl(String in) {
 
         Uri buildUri = Uri.parse(API_URL).buildUpon()
                 .appendPath(MOVIE_QUERY).appendPath(in)
@@ -50,7 +51,7 @@ class NetworkUtils {
     //this method takes the input id string received in json and creates and returns
     //the poster url corresponding to that id;
 
-    static URL buildPosterUrl(String in) {
+    public static URL buildPosterUrl(String in) {
 
         Uri buildUri = Uri.parse(POSTER_BASE_URL).buildUpon()
                 .build();
@@ -65,9 +66,24 @@ class NetworkUtils {
 
     }
 
+    //this method builds the url for a specific movie id
+    public static URL MovieDetailURl(String id) {
+        Uri buildUri = Uri.parse(Movie_BASE_URL_ONE).buildUpon()
+                .appendPath(id).appendQueryParameter(API_APPEND,API_KEY)
+                .appendQueryParameter(LANGUAGE_TYPE,"en-US").build();
+        URL url = null;
+        try {
+            url = new URL(buildUri.toString());
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        return url;
+    }
+
     //method for getting response from url
 
-    static String getResponseFromHttpUrl(URL url) throws IOException {
+    public static String getResponseFromHttpUrl(URL url) throws IOException {
 
         HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
 
@@ -84,5 +100,6 @@ class NetworkUtils {
             urlConnection.disconnect();
         }
     }
+
 
 }
