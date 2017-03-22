@@ -21,7 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activity.DetailsActivity"></activity>
+        <activity android:name=".Activity.DetailsActivity"
+            android:label="@string/detail_activity"
+            android:parentActivityName=".MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        />
     </application>
 
 </manifest>
