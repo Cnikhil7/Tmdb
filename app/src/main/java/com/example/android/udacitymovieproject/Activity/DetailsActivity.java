@@ -43,6 +43,8 @@ public class DetailsActivity extends AppCompatActivity implements
     private TextView mErrorMessage;
     private ProgressBar mLoadingIndicator;
     private ImageView mPoster;
+    private TextView mSynopsis;
+    private Boolean mTag = true;
     private Target mTarget;
 
     @Override
@@ -76,9 +78,26 @@ public class DetailsActivity extends AppCompatActivity implements
         mLoadingIndicator = (ProgressBar) findViewById(R.id.detail_progressBar);
         mErrorMessage = (TextView) findViewById(R.id.detail_errorMessage);
         mPoster = (ImageView) findViewById(R.id.detail_itemPoster);
-
+        mSynopsis = (TextView)findViewById(R.id.detail_itemSynopsis);
+        toggleSynopsis();
         makeQuery(title);
 
+    }
+
+    private void toggleSynopsis() {
+        // toggling synopsis text view for full summary
+        mSynopsis.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTag) {
+                    mSynopsis.setMaxLines(Integer.MAX_VALUE);
+                    mTag = false;
+                } else {
+                    mSynopsis.setMaxLines(4);
+                    mTag = true;
+                }
+            }
+        });
     }
 
 
@@ -178,13 +197,14 @@ public class DetailsActivity extends AppCompatActivity implements
             String runtime = item.getRuntime();
             String posterUrl = item.getPosterUrl();
             String year = item.getReleaseDate();
-
+            String synopsis = item.getSypnosis();
             getPoster(posterUrl);
 
             mRating.setText(rating.concat("/10"));
             mReleaseYear.setText(year.substring(0, 4));
             mTitle.setText(title);
             mRuntime.setText(runtime.concat(" minutes"));
+            mSynopsis.setText(synopsis);
 
         } else showErrorMessage();
 

@@ -79,9 +79,20 @@
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/detail_itemSynopsis"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="4"
+                android:minLines="4"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="16dp"
+                android:textSize="16sp"
+                tools:text="@string/sample_string" />
 
         </LinearLayout>
-
 
     </ScrollView>
 
